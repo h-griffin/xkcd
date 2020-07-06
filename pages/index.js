@@ -1,19 +1,28 @@
-export default function Home() {
+import Layout from '../components/layout'
+import Footer from '../components/Footer'
+
+export default function Home(props) {
   return (
-    <div className="hello">
-      <p>Hello World</p>
-      <style jsx>{`
-        .hello {
-          font: 15px Helvetica, Arial, sans-serif;
-          background: #eee;
-          padding: 100px;
-          text-align: center;
-          transition: 100ms ease-in background;
-        }
-        .hello:hover {
-          background: #ccc;
-        }
-      `}</style>
-    </div>
+    <>
+    <Layout>
+        <h1>XKCD</h1>
+        <h2>{props.comic.title}</h2>
+        <img src={props.comic.img} alt={props.comic.alt} />
+        <Footer comicNum={props.comic.num}/>
+    </Layout>
+    </>
   )
+}
+
+export async function getServerSideProps(context){
+    const response = await fetch('http://xkcd.com/info.0.json');
+
+    const data = await response.json();
+
+
+    return{
+        props: { //passed to page component as props
+            comic: data //json from the fetched url
+        }, 
+    }
 }
